@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gusa Ai V2.5.4</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #fff;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 2px solid black;
+    }
+    header img {
+      width: 30px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .chat {
+      padding: 20px;
+      height: 70vh;
+      overflow-y: auto;
+    }
+    .user, .ai {
+      margin: 10px 0;
+      padding: 10px 15px;
+      max-width: 70%;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .user {
+      background: #d0d8f3;
+      align-self: flex-end;
+    }
+    .ai {
+      background: #eaeaea;
+    }
+    .input-container {
+      display: flex;
+      padding: 10px;
+      border-top: 2px solid black;
+    }
+    input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-left: 10px;
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 250px;
+      background: #fff;
+      border-right: 2px solid black;
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .sidebar.active {
+      display: flex;
+    }
+    .sidebar button {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid black;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar" id="menuSidebar">
+    <p><strong>Created By WISNU ELITIS</strong></p>
+    <p><img src="https://via.placeholder.com/80" alt="User Icon"><br>User 001</p>
+    <button>🌐 Website</button>
+    <button>📱 WhatsApp</button>
+    <button>📷 Instagram</button>
+    <button>📞 Contact Us</button>
+    <p style="margin-top:auto;">Thanks To God.</p>
+  </div>
+  
+  <header>
+    <img src="https://cdn-icons-png.flaticon.com/512/512/512222.png" onclick="toggleSidebar()" />
+    <h1>Gusa Ai V2.5.4</h1>
+  </header>
+
+  <div class="chat" id="chatBox">
+    <!-- chat muncul di sini -->
+  </div>
+
+  <div class="input-container">
+    <input type="text" id="userInput" placeholder="masukkan teks..." />
+    <button onclick="sendMessage()">➤</button>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const input = document.getElementById('userInput');
+
+    function toggleSidebar() {
+      document.getElementById('menuSidebar').classList.toggle('active');
+    }
+
+    function appendChat(role, message) {
+      const div = document.createElement('div');
+      div.className = role;
+      div.textContent = message;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      appendChat('user', text);
+      input.value = '';
+
+      const apiKey = 'GEMINI_API_KEY_KAMU';
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey;
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text }] }]
+        })
+      });
+
+      const data = await res.json();
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '(Tidak ada respon)';
+      appendChat('ai', reply);
+    }
+  </script>
+</body>
+</html>
