@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gusa Ai V2.5.4</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: sans-serif;
@@ -29,6 +30,8 @@
       padding: 20px;
       height: 70vh;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
     .user, .ai {
       margin: 10px 0;
@@ -43,6 +46,7 @@
     }
     .ai {
       background: #eaeaea;
+      align-self: flex-start;
     }
     .input-container {
       display: flex;
@@ -68,48 +72,69 @@
       left: 0;
       top: 0;
       bottom: 0;
-      width: 250px;
+      width: 100%;
       background: #fff;
-      border-right: 2px solid black;
+      z-index: 10;
       padding: 20px;
       display: none;
       flex-direction: column;
-      z-index: 10;
+      text-align: center;
     }
     .sidebar.active {
       display: flex;
     }
-    .sidebar button {
-      margin: 10px 0;
+    .sidebar button.link-btn {
+      margin: 10px auto;
       padding: 10px;
       font-size: 16px;
       border: 1px solid black;
       border-radius: 30px;
       display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 200px;
+      cursor: pointer;
+      text-decoration: none;
+      color: black;
+      background: white;
+    }
+    .sidebar .back-btn {
+      margin-top: 20px;
+      padding: 8px 20px;
+      border: 1px solid black;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <!-- Sidebar/Menu -->
   <div class="sidebar" id="menuSidebar">
     <p><strong>Created By WISNU ELITIS</strong></p>
     <p><img src="https://via.placeholder.com/80" alt="User Icon"><br>User 001</p>
-    <button>🌐 Website</button>
-    <button>📱 WhatsApp</button>
-    <button>📷 Instagram</button>
-    <button>📞 Contact Us</button>
+
+    <a href="https://your-website.com" class="link-btn" target="_blank">🌐 Website</a>
+    <a href="https://wa.me/1234567890" class="link-btn" target="_blank">📱 WhatsApp</a>
+    <a href="https://instagram.com/yourusername" class="link-btn" target="_blank">📷 Instagram</a>
+    <a href="tel:+621234567890" class="link-btn" target="_blank">📞 Contact Us</a>
+
     <p style="margin-top:auto;">Thanks To God.</p>
+    <button class="back-btn" onclick="toggleSidebar()">Kembali</button>
   </div>
-  
+
+  <!-- Header -->
   <header>
     <img src="https://cdn-icons-png.flaticon.com/512/512/512222.png" onclick="toggleSidebar()" />
     <h1>Gusa Ai V2.5.4</h1>
   </header>
 
+  <!-- Chatbox -->
   <div class="chat" id="chatBox">
-    <!-- chat muncul di sini -->
+    <!-- chat akan muncul di sini -->
   </div>
 
+  <!-- Input -->
   <div class="input-container">
     <input type="text" id="userInput" placeholder="masukkan teks..." />
     <button onclick="sendMessage()">➤</button>
@@ -137,20 +162,24 @@
       appendChat('user', text);
       input.value = '';
 
-      const apiKey = 'GEMINI_API_KEY_KAMU';
+      const apiKey = 'AIzaSyCQE-rjYHJNHfK37ybw01hEsMQx3ZeFWLc';
       const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey;
 
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text }] }]
-        })
-      });
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text }] }]
+          })
+        });
 
-      const data = await res.json();
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '(Tidak ada respon)';
-      appendChat('ai', reply);
+        const data = await res.json();
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '(Tidak ada respon)';
+        appendChat('ai', reply);
+      } catch (err) {
+        appendChat('ai', 'Terjadi kesalahan.');
+      }
     }
   </script>
 </body>
