@@ -311,7 +311,7 @@
         });
 
         const data = await res.json();
-        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '(Tidak ada respon)';
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sedang dalam maintenance...';
         appendChat('ai', reply);
       } catch (err) {
         appendChat('ai', 'Terjadi kesalahan.');
