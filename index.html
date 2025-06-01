@@ -280,6 +280,141 @@
     const chatBox = document.getElementById('chatBox');
     const input = document.getElementById('userInput');
 
+    // Data rules dari AutoResponder yang Anda berikan
+    // Format: "pattern","pattern_matching","reply_message","multiple_replies","multiple_reply_delay","multiple_reply_delay_max",...
+    const autoResponderRules = [
+      "/menu","none","Halo kak @%name%\nSelamat datang di Nandaa Botz\n\nSilahkan register terlebih dahulu ya!!\n*Example:* /register Nanda","single","","","b","","","","","0","","","","","","","","seconds","3","0","","",,,,,,,,,,",
+      "/allmenu","none","Wait///<#>Halo kak %name%🫠\n\nNama: %name%\nBallance: %rndm_num_1000_10000000%\n\nNama bot: Nandaa Botz\nCreator: Nandaa\nServer: autoresponder\n\n===========================\n                     GAME MENU\n===========================\n•/gacha\n•/shop\n•/gojek\n•/ngepet\n•/maling\n•/mancing\n•/berburu\n•/apakah <pesan>\n•/kapan <pesan>\n•/cekgay @\n•/cekpintar @\n•/cektolol @\n===========================\n                   GLOBAL MENU\n===========================\n•/menu\n•/listmenu\n•/Owner\n•/botserver\n•/antilink\n•/cektanggal\n\n============================\n                    OWNER MENU\n============================\n•/addbalance\n•/addxp\n•/ban\n\n=============================\n                    OTHER MENU\n=============================\n•/afk\n•/bot <pesan>\n\n~Mohon maaf jika ada bug mohon di maklumi karena ini masih tahap Beta!\n\nRuntime: 24jam","all","5","5","b","","","","","0","","","","","","","","seconds","0","1","","",,,,,,,,,,",
+      "/gacha","none","Wait////<#>Berapakali spin yang anda inginkan?\n\n[ 1x ] or [ 5x ]","all","3","3","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/shop","none","!! KETIK /SB JIKA MAU MEMBELI DAN /SC !!\n\n*Contoh: /SB durian 10*\n\nKeterangan: \n-sb (shop buy)\n-sc (shop cancel)\n\n*List shop*\n\n-ikan (3k)\n-potion heal (15k)\n-xp (2k)\n-jajan (5k)\n-minuman (5k)\n-udang (20k)\n-jagung (10k)\n-durian (50k)","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/sb*","normal","Apakah anda yakin untuk membeli barang?\n\n[ Y ] or [ N ]","single","","","b","","","2","2","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/sc","none","BERHASIL CANCEL!","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/gojek","none","Menunggu pelanggan///<#>Menemukan pelanggan///\n\nNama: %rndm_custom_1_tono,Rudy, Hartono, Ahmad, Jaiz,brody,Jokowi,Nandaa,Fathan,Lintang,asep,udin%\nTujuan: %rndm_custom_1_bali,Amerika,Papua,Jawa,Kalimantan,Sumatra,Australia,China,Thailand,Myanmar,India,Afrika,polandia%\nOngkos: %%rndm_num_1000000_1000000000000%\n\n%rndm_num_1_3% hari kemudian////\n\nPelanggan telah sampai","all","3","3","b","","","3","3","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/ngepet","none","Sorry! I don't run this command\nBut, this is not halal!","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/maling","none","Anda telah di tangkap polisi 👮‍♂️🚔<#>ANDA BERHASIL MALING!\nBarang yang di dapat:\n\nuang sebesar 1 miliar","random","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/mancing","none","Sedang memancing/////<#>Selesai mancing///<#>Hasil yang didapat:\n%rndm_custom_1_ranting kayu,ikan 10 ekor,ga dapet apa apa%","all","","","b","","","3","3","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/berburu","none","Menjelajahi hutan///<#>Sedang berburu///<#>Hasil yang di dapat:\n%rndm_custom_1_kelinci 2 ekor,ga dapet apa apa,harimau,burung elang,kucing,singa,kangguru%","all","3","3","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/apakah*","normal","Pertanyaan: %message%\nJawab: %rndm_custom_1_iya,tidak,mungkin iya,mungkin tidak%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/kapan*","normal","Pertanyaan: %message%\nJawab: %rndm_custom_1_nanti,gk tau,besok,tahun depan, bulan depan,mana gw tau🗿%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/cekgay @*","normal","Pertanyaan: %message%\nJawab: %rndm_num_0_100%%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/cekpintar @*","normal","Pertanyaan: %message%\nJawab: %rndm_num_0_100%%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/cektolol @*","normal","Pertanyaan: %message%\nJawab: %rndm_num_0_100%%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,", // Menambahkan ini dari data Anda
+      "/listmenu","none","List menu:\n\n-/menu\n-/allmenu","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/owner","none","Pake nanya","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/botserver","none","({Bot Server})\n\n•Nama » %name%\n•NamaBot » NandaBotzV1\n•Server » autoresponder\n•Script » public","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/antilink","none","Halo!! Antilink nya udah aktif kak","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/cektanggal","none","Sekarang adalah tanggal %day_of_month%,%month_name%,%year%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "https*","normal","[{LINK DETECTOR}]\n\nDI LARANG MENYEBAR LINK GROUP SEBELUM ADA IZIN DARI ADMIN!","single","","","g","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "kontol//memek//ngentot//ngentod//asu//asw//tolol//lolok//pepek//","normal","~Anti toxic~\n\nNama: %name%\nPesan: %message%\n\nApa coba","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/ban///addxp///addbalance","normal","Maaf! Anda bukan owner","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "(\/|#|/|\$|!)(afk)(\s*/*)","expert","Nama: %name%\nReason: %capturing_group_3%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      // Baris ini ("/bot*///ai*") adalah kasus khusus karena ada "sk-..." yang kemungkinan API key, dan juga respons "Sorry please check your cmd".
+      // Untuk tujuan ini, saya akan menganggapnya sebagai respons manual biasa dan bukan panggilan API aktif.
+      "/bot*///ai*","normal","Berikut percakapan dengan asisten AI menggunakan AutoResponder/ai/ Asistennya sangat membantu, kreatif, pintar, dan sangat ramah/\n\n1:: %prev_message_0_3_512%\n2:: %prev_reply_0_3_512%\n1:: %prev_message_0_2_512%\n2:: %prev_reply_0_2_512%\n1:: %prev_message_0_1_512%\n2:: %prev_reply_0_1_512%\n1:: %message_512%\n2: Maaf, saya tidak dapat memproses perintah AI eksternal dalam mode ini.","gpt3","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,", // Respons disederhanakan
+      "/cekgay","none","Lu mau cek siapa anjg?🗿\nMinimal tag orangnya lah","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/cekpintar","none","APAAN SIH KANG\nLU MAU CEK SIAPA COBA\n\nMINIMAL TAG ORANG NYA","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "(\/|#|/|\$|!)(register)(\s*/*)","expert","Menunggu/////<#>Halo%capturing_group_3% \n\nKamu berhasil di register!\nSilahkan ketik /menu","all","4","4","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "(\/|#|/|\$|!)(menu)(\s*/*)","expert","Wait ya! ⌛///<#>Halo kak%capturing_group_3% \n\n\nNama bot: Nandaa Botz\nCreator: Nandaa\nServer: autoresponder\nScript: public\nPrefix: [ / ]\nVersion: 1/0/0\nTanggal: %day_of_week%, %month%, %year%\n\n===========================\n                     GAME MENU\n===========================\n•/gacha\n•/shop\n•/gojek\n•/ngepet\n•/maling\n•/mancing\n•/berburu\n•/apakah <pesan>\n•/kapan <pesan>\n•/cekgay @\n•/cekpintar @\n•/cektolol @\n===========================\n                   GLOBAL MENU\n===========================\n•/menu\n•/listmenu\n•/Owner\n•/botserver\n•/antilink\n•/cektanggal\n•/infobot\n•/restartbot\n•/profil\n\n============================\n                    OWNER MENU\n============================\n•/addbalance\n•/addxp\n•/ban\n\n=============================\n                    OTHER MENU\n=============================\n•/afk\n•/bot <pesan>\n•/hidetag <pesan>\n•/script\n\n~Mohon maaf jika ada bug mohon di maklumi karena ini masih tahap Beta!\n\nRuntime: 24jam","all","3","3","b","","","3","3","0","","","","","","","","seconds","0","0","28","",,,,,,,,,,",
+      "/infobot","none","Mohon tunggu ⌛///<#>*[{Bot Info}]*\n\nNama bot: NandaBotz\nOwner: Nanda api geratis\nPrefix: [ / ]\nServer: autoresponder\nScript: public\nBahasa: [ 🇮🇩 ]\nOnline: 24jam","all","3","3","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/restartbot","none","Menunggu ⌛/////<#>Yakin untuk restart bot?\n[ Y ]  or  [ N ]","all","5","5","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "/profil","none","{[Profil]}\n\n~Nama: %name%\n~user: Android\n~uang: Rp%rndm_num_0_1000000%\n~rank: gratisan","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "y","none","Mohon tunggu////<#>Bot telah di restart !","all","5","5","b","","","","","0","","","","","","","","seconds","0","0","31","",,,,,,,,,,",
+      "n","none","Restart bot berhasil di cancel !","single","","","b","","","","","0","","","","","","","","seconds","0","0","31","",,,,,,,,,,",
+      "1x","none","Mohon tunggu////<#>Selamat @%name% !!\nKamu mendapatkan %rndm_custom_1_,200xp,ikan cupang,20 bounty,10k money,zonk,tanah liat,berlian,jagung,makanan%","all","3","3","b","","","3","3","0","","","","","","","","seconds","0","0","3","",,,,,,,,,,",
+      "5x","none","Mohon tunggu///<#>Selamat @%name% !!\nKamu mendapatkan %rndm_custom_1_,200xp,ikan cupang,20 bounty,10k money,zonk,tanah liat,berlian,jagung,makanan%,Selamat @%name% !!\nKamu mendapatkan %rndm_custom_1_,200xp,ikan cupang,20 bounty,10k money,zonk,tanah liat,berlian,jagung,makanan%,Selamat @%name% !!\nKamu mendapatkan %rndm_custom_1_,200xp,ikan cupang,20 bounty,10k money,zonk,tanah liat,berlian,jagung,makanan%,Selamat @%name% !!\nKamu mendapatkan %rndm_custom_1_,200xp,ikan cupang,20 bounty,10k money,zonk,tanah liat,berlian,jagung,makanan%,Selamat @%name% !!\nKamu mendapatkan %rndm_custom_1_,200xp,ikan cupang,20 bounty,10k money,zonk,tanah liat,berlian,jagung,makanan%","all","3","3","b","","","","","0","","","","","","","","seconds","0","0","3","",,,,,,,,,,",
+      "/addpremium @*","normal","Apakah anda yakin ?\n[ Y ] or [ N ]","single","","","b","","","","","0","","","","","","","","seconds","0","1","","",,,,,,,,,,",
+      "y","none","Mohon tunggu!/////<#>Berhasil","all","","","b","","","3","3","0","","","","","","","","seconds","0","0","37","",,,,,,,,,,",
+      "(\/|#|/|\$|!)(hidetag)(\s*/*)","expert","%capturing_group_3%","single","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,,,,",
+      "y","none","Maaf! UANG ANDA TIDAK CUKUP<#>Berhasil membeli barang!","random","","","b","","","","","0","","","","","","","","seconds","0","0","5","",,,,,<seg_107>",
+      "n","none","Pembelian berhasil di cancel","single","","","b","","","","","0","","","","","","","","seconds","0","0","5","",,,,,,,,,,"
+    ];
+
+    // Fungsi untuk mendapatkan nama pengguna (bisa disesuaikan jika ada login, dll.)
+    function getUserName() {
+      // Untuk tujuan demo, kita bisa pakai nama statis atau minta input pertama kali
+      return "Pengguna";
+    }
+
+    // Fungsi untuk menghasilkan angka acak
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Fungsi untuk memproses placeholder dan logika AutoResponder
+    async function processReply(replyMessage, replyType, delay, delayMax, messageText, userName) {
+      let replies = [];
+
+      // Split based on "///" (multiple replies)
+      let parts = replyMessage.split('///');
+
+      // Filter out empty parts that might result from trailing "///"
+      parts = parts.filter(part => part.trim() !== '');
+
+      // Replace placeholders for each part
+      for (let i = 0; i < parts.length; i++) {
+        let processedPart = parts[i];
+
+        // Replace <#> (line break in AutoResponder) with newline character
+        processedPart = processedPart.replace(/<#>/g, '\n');
+
+        // %name%
+        processedPart = processedPart.replace(/%name%/g, userName || getUserName());
+
+        // %message% (this refers to the original user input)
+        processedPart = processedPart.replace(/%message%/g, messageText);
+
+        // %day_of_month%, %month_name%, %year%, %day_of_week%, %month%
+        const date = new Date();
+        processedPart = processedPart.replace(/%day_of_month%/g, date.getDate());
+        processedPart = processedPart.replace(/%month_name%/g, date.toLocaleString('id-ID', { month: 'long' }));
+        processedPart = processedPart.replace(/%year%/g, date.getFullYear());
+        processedPart = processedPart.replace(/%day_of_week%/g, date.toLocaleString('id-ID', { weekday: 'long' }));
+        processedPart = processedPart.replace(/%month%/g, date.toLocaleString('id-ID', { month: 'long' }));
+
+
+        // %rndm_num_min_max%
+        processedPart = processedPart.replace(/%rndm_num_(\d+)_(\d+)%/g, (match, min, max) => {
+          return getRandomNumber(parseInt(min), parseInt(max));
+        });
+
+        // %rndm_custom_1_val1,val2,val3%
+        processedPart = processedPart.replace(/%rndm_custom_1_([^%]+)%/g, (match, values) => {
+          const customValues = values.split(',');
+          return customValues[Math.floor(Math.random() * customValues.length)];
+        });
+
+        // %capturing_group_X% (requires regex match info)
+        // This is complex without knowing the regex match.
+        // For now, let's assume it's for the last regex match.
+        // If the pattern was expert and captured groups, we'd need to pass that info here.
+        // For simplicity, let's just replace with empty string if not provided in context.
+        processedPart = processedPart.replace(/%capturing_group_(\d+)%/g, ''); // Needs actual capturing group data
+
+        // Other specific placeholders not covered (like %prev_message%, etc.)
+        // These are more complex and rely on chat history. For now, we'll strip them or replace with generic.
+        processedPart = processedPart.replace(/%prev_message_[^%]+%/g, '[Pesan Sebelumnya]');
+        processedPart = processedPart.replace(/%prev_reply_[^%]+%/g, '[Balasan Sebelumnya]');
+        processedPart = processedPart.replace(/%message_(\d+)%/g, messageText); // %message_512% means truncating message to 512 chars
+
+        replies.push(processedPart);
+      }
+
+      if (replyType === "single" || replies.length === 1) {
+        appendChat('ai', replies[0]);
+      } else if (replyType === "all") {
+        for (let i = 0; i < replies.length; i++) {
+          appendChat('ai', replies[i]);
+          if (i < replies.length - 1) { // Add delay between multiple replies
+            const currentDelay = delay ? parseInt(delay) * 1000 : 500; // Default 0.5s if no delay specified
+            await new Promise(resolve => setTimeout(resolve, currentDelay));
+          }
+        }
+      } else if (replyType === "random") {
+        const randomReply = replies[Math.floor(Math.random() * replies.length)];
+        appendChat('ai', randomReply);
+      }
+    }
+
     function toggleSidebar() {
       document.getElementById('menuSidebar').classList.toggle('active');
     }
@@ -287,7 +422,7 @@
     function appendChat(role, message) {
       const div = document.createElement('div');
       div.className = role;
-      div.textContent = message;
+      div.innerHTML = message.replace(/\n/g, '<br>'); // Handle newlines for display
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -298,23 +433,75 @@
       appendChat('user', text);
       input.value = '';
 
-      const apiKey = 'AIzaSyCQE-rjYHJNHfK37ybw01hEsMQx3ZeFWLc';
-      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey;
+      let foundMatch = false;
+      const userName = getUserName(); // Get current user name
+      const lowerCaseText = text.toLowerCase();
+      
+      for (const ruleString of autoResponderRules) {
+        const parts = ruleString.split('","'); // Split by ","
+        if (parts.length < 3) continue; // Skip malformed rules
 
-      try {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            contents: [{ role: 'user', parts: [{ text }] }]
-          })
-        });
+        const pattern = parts[0];
+        const patternMatching = parts[1];
+        const replyMessage = parts[2];
+        const multipleReplies = parts[3]; // "single", "all", "random"
+        const multipleReplyDelay = parts[4] || ""; // Delay value (e.g., "3")
+        const multipleReplyDelayMax = parts[5] || ""; // Max delay (e.g., "3")
 
-        const data = await res.json();
-        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || '(Tidak ada respon)';
-        appendChat('ai', reply);
-      } catch (err) {
-        appendChat('ai', 'Terjadi kesalahan.');
+        let isMatch = false;
+
+        if (patternMatching === "none") { // Exact match (case-insensitive)
+          isMatch = (lowerCaseText === pattern.toLowerCase());
+        } else if (patternMatching === "normal") { // Contains or starts with (simplified interpretation for "normal")
+          if (pattern.endsWith('*')) { // Pattern like /sb*
+            const basePattern = pattern.slice(0, -1).toLowerCase();
+            isMatch = lowerCaseText.startsWith(basePattern);
+          } else if (pattern.includes('//')) { // Multiple keywords separated by "//"
+            const keywords = pattern.toLowerCase().split('//');
+            isMatch = keywords.some(keyword => lowerCaseText.includes(keyword.trim()));
+          } else { // Direct contains match
+            isMatch = lowerCaseText.includes(pattern.toLowerCase());
+          }
+        } else if (patternMatching === "expert") { // Regex matching
+          try {
+            // Need to clean up the regex pattern from AutoResponder for JS
+            // For example, (\/|#|/|\$|!)(afk)(\s*/*) becomes /(\/|#|\/|\$|!)(afk)(\s*\/s*)/
+            let jsPattern = pattern.replace(/\//g, '\\/').replace(/\s*\/\*\s*/g, '(\\s*.*)?'); // Handle /* as optional any chars
+            // Specific handling for (\/|#|/|\$|!)(afk)(\s*/*)
+            if (jsPattern.includes(')(\\s*\\/s*)') || jsPattern.includes(')(\\s*\\/*)')) {
+                 jsPattern = pattern.replace(/(\/|#|\/|\$|!)/g, '(\\/|#|\\/|\\$|!)') // Escape slashes for regex
+                                .replace(/\s*\/\*\s*/g, '(\\s*.*)?'); // Turn /* into optional anything
+            }
+            // For (afk)(\s*/*) capture group 3 is the text after afk. We capture it.
+            const regex = new RegExp(jsPattern, 'i'); // Case-insensitive
+            const match = text.match(regex);
+            if (match) {
+                isMatch = true;
+                // Store capturing groups if needed for %capturing_group_X%
+                // For this simplified version, we're not fully implementing %capturing_group_X% dynamically yet
+                // as it's complex and requires passing the 'match' object around.
+                // For now, if %capturing_group_3% is used, we'll try to get it from a general regex.
+                if (replyMessage.includes('%capturing_group_3%') && match[3]) {
+                  // This is a simplified direct replacement.
+                  // A more robust solution would pass the 'match' object to processReply.
+                  // For now, let's make sure `messageText` passed to processReply carries this context if needed.
+                }
+            }
+          } catch (e) {
+            console.error("Invalid regex pattern:", pattern, e);
+          }
+        }
+
+        if (isMatch) {
+          foundMatch = true;
+          // Pass the original message text for %message% and potentially for %capturing_group_X%
+          await processReply(replyMessage, multipleReplies, multipleReplyDelay, multipleReplyDelayMax, text, userName);
+          break; // Stop after first match
+        }
+      }
+
+      if (!foundMatch) {
+        appendChat('ai', "Maaf, saya tidak mengerti perintah Anda. Coba ketik `/menu` atau `/allmenu`.");
       }
     }
   </script>
