@@ -1,184 +1,132 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gusa Ai V2.5.4</title>
   <style>
-    /* Mengimpor font pixel dari Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-    * {
-      box-sizing: border-box;
-      /* Menggunakan font pixel jika tersedia, fallback ke monospace */
-      font-family: 'Press Start 2P', cursive, monospace;
-    }
-
+    /* Global Styles */
     body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      /* Warna dasar tanah/lumut */
-      background: #507D2A;
-      /* Menambahkan efek pixelated ringan pada background */
-      background-image:
-        linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 100%),
-        linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.1) 75%, rgba(0, 0, 0, 0.1) 100%);
-      background-size: 8px 8px; /* Ukuran pixel */
-      color: #F0F2EB; /* Warna teks yang kontras dengan background alam */
-      text-rendering: crisp-edges; /* Mencoba membuat teks terlihat lebih pixelated */
+      background: #333;
+      color: #F0F2EB;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
     }
 
     header {
+      background: #4A4A4A;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
-      padding: 10px;
-      /* Border seperti akar pohon atau cabang */
-      border-bottom: 3px solid #3A571F;
-      background: #6B8E23; /* Warna hijau daun tua */
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Efek shadow ringan */
-    }
-
-    header img {
-      width: 30px;
-      margin-right: 10px;
-      cursor: pointer;
-      /* Membulatkan gambar agar terlihat seperti ikon game lama */
-      border-radius: 5px;
-      image-rendering: pixelated; /* Memastikan gambar tetap pixelated */
+      border-bottom: 2px solid #2B2B2B;
     }
 
     header h1 {
-      font-size: 20px;
-      font-weight: bold;
-      color: #F0F2EB; /* Warna teks judul */
-      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2); /* Efek shadow teks untuk nuansa pixel */
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    header img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      margin-right: 15px;
+      border-radius: 50%;
+      background: #F0F2EB;
+      padding: 2px;
     }
 
     .chat {
-      padding: 20px;
-      height: 70vh;
+      flex-grow: 1;
       overflow-y: auto;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      /* Latar belakang chat seperti permukaan air atau langit */
-      background: #A7D9D3;
-      border-left: 3px solid #507D2A;
-      border-right: 3px solid #507D2A;
-      border-bottom: 3px solid #507D2A;
-      /* Scrollbar ala pixel */
-      scrollbar-width: thin;
-      scrollbar-color: #3A571F #A7D9D3;
+      gap: 15px;
     }
 
-    /* Scrollbar untuk Webkit (Chrome, Safari) */
-    .chat::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    .chat::-webkit-scrollbar-track {
-      background: #A7D9D3;
-    }
-
-    .chat::-webkit-scrollbar-thumb {
-      background-color: #3A571F;
-      border-radius: 20px;
-      border: 3px solid #A7D9D3;
-    }
-
-
-    .user,
-    .ai {
-      margin: 10px 0;
+    .chat .user, .chat .ai {
       padding: 10px 15px;
+      border-radius: 10px;
       max-width: 70%;
-      /* Border radius yang lebih kotak untuk efek pixel */
-      border-radius: 4px;
-      display: inline-block;
-      /* Box shadow untuk efek kedalaman pixel */
-      box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      word-wrap: break-word;
     }
 
-    .user {
-      /* Warna gelembung user seperti batu atau tanah liat */
-      background: #8B4513;
-      color: #F0F2EB;
+    .chat .user {
+      background: #007bff;
+      color: white;
       align-self: flex-end;
+      border-bottom-right-radius: 0;
     }
 
-    .ai {
-      /* Warna gelembung AI seperti awan atau kabut */
-      background: #D3D3D3;
-      color: #3A571F;
+    .chat .ai {
+      background: #555;
+      color: #F0F2EB;
       align-self: flex-start;
+      border-bottom-left-radius: 0;
     }
-
+    
     .input-container {
       display: flex;
       padding: 10px;
-      /* Border atas seperti batang pohon */
-      border-top: 3px solid #3A571F;
-      background: #6B8E23;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+      background: #4A4A4A;
     }
 
-    input {
-      flex: 1;
+    .input-container input {
+      flex-grow: 1;
       padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #555;
+      background: #333;
+      color: white;
       font-size: 16px;
-      /* Border radius yang lebih kotak */
-      border-radius: 4px;
-      /* Border input seperti kulit pohon */
-      border: 2px solid #3A571F;
-      background: #F0F2EB;
-      color: #3A571F;
-      /* Efek inset untuk tombol yang ditekan */
-      box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.2);
     }
 
-    input::placeholder {
-      color: rgba(58, 87, 31, 0.7);
-    }
-
-    button {
+    .input-container button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
       margin-left: 10px;
       font-size: 20px;
-      background: none;
-      border: none;
       cursor: pointer;
-      color: #F0F2EB;
-      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
-      /* Efek hover untuk tombol */
-      transition: transform 0.1s ease-in-out;
+      transition: background 0.2s;
     }
 
-    button:hover {
-      transform: translateY(-2px);
+    .input-container button:hover {
+      background: #0056b3;
     }
-
+    
     button:active {
       transform: translateY(1px);
     }
 
+    /* --- Sidebar Styles (Modifikasi Utama) --- */
     .sidebar {
       position: fixed;
       left: 0;
       top: 0;
       bottom: 0;
-      width: 100%;
-      /* Background sidebar seperti tebing atau gua */
+      width: 100%; /* Default untuk mode potrait (ponsel) */
       background: #4A4A4A;
       z-index: 10;
       padding: 20px;
       display: none;
       flex-direction: column;
       text-align: center;
-      /* Border seperti akar atau retakan */
       border-right: 3px solid #2B2B2B;
       color: #F0F2EB;
-      /* Efek pixelated pada background */
       background-image:
         linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1) 100%),
         linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1) 100%);
       background-size: 10px 10px;
+      box-sizing: border-box;
     }
 
     .sidebar.active {
@@ -189,35 +137,32 @@
       text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
     }
 
-    .sidebar button.link-btn {
+    /* Selector diubah dari "button.link-btn" menjadi "a.link-btn" */
+    .sidebar a.link-btn {
       margin: 10px auto;
       padding: 10px;
       font-size: 16px;
-      /* Border tombol seperti cabang kering */
       border: 2px solid #2B2B2B;
-      /* Border radius yang lebih kotak */
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      width: 200px;
+      width: 220px;
       cursor: pointer;
       text-decoration: none;
       color: #F0F2EB;
-      /* Background tombol seperti tanah atau lumpur */
-      background: #8B4513;
-      /* Efek inset untuk tombol */
+      background: #8B4513; /* Background tanah/lumpur */
       box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.2);
       transition: background 0.1s ease-in-out, transform 0.1s ease-in-out;
     }
 
-    .sidebar button.link-btn:hover {
-      background: #A0522D; /* Warna yang sedikit lebih cerah saat hover */
+    .sidebar a.link-btn:hover {
+      background: #A0522D;
       transform: translateY(-2px);
     }
 
-    .sidebar button.link-btn:active {
+    .sidebar a.link-btn:active {
       transform: translateY(1px);
       box-shadow: inset 1px 1px 0px rgba(0, 0, 0, 0.2);
     }
@@ -225,17 +170,15 @@
     .sidebar .back-btn {
       margin-top: 20px;
       padding: 8px 20px;
-      /* Border tombol kembali seperti lumut */
       border: 2px solid #3A571F;
-      /* Border radius yang lebih kotak */
       border-radius: 4px;
       cursor: pointer;
       color: #F0F2EB;
-      /* Background tombol kembali seperti daun */
-      background: #507D2A;
-      /* Efek inset untuk tombol */
+      background: #507D2A; /* Background daun */
       box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.2);
       transition: background 0.1s ease-in-out, transform 0.1s ease-in-out;
+      font-size: 16px;
+      align-self: center;
     }
 
     .sidebar .back-btn:hover {
@@ -247,6 +190,14 @@
       transform: translateY(1px);
       box-shadow: inset 1px 1px 0px rgba(0, 0, 0, 0.2);
     }
+    
+    /* --- Media Query untuk Mode Desktop --- */
+    /* Aturan ini hanya berlaku jika lebar layar 768px atau lebih */
+    @media (min-width: 768px) {
+      .sidebar {
+        width: 350px; /* Lebar sidebar menjadi tetap di mode desktop */
+      }
+    }
   </style>
 </head>
 <body>
@@ -254,10 +205,10 @@
     <p><strong>Created By WISNU ELITIS</strong></p>
     <p>Information:</p>
 
-    <a class ="back-btn" href="https://your-website.com" class="link-btn" target="_blank">🌐 Website</a>
-    <a class ="back-btn" href="https://wa.me/1234567890" class="link-btn" target="_blank">📱 WhatsApp</a>
-    <a class ="back-btn" href="https://instagram.com/yourusername" class="link-btn" target="_blank">📷 Instagram</a>
-    <a class ="back-btn" href="tel:+621234567890" class="link-btn" target="_blank">📞 Contact Us</a>
+    <a href="https://your-website.com" class="link-btn" target="_blank">🌐 Website</a>
+    <a href="https://wa.me/6285774399738" class="link-btn" target="_blank">📱 WhatsApp</a>
+    <a href="https://instagram.com/yourusername" class="link-btn" target="_blank">📷 Instagram</a>
+    <a href="https://your-website.com/contact" class="link-btn" target="_blank">📞 Contact Us</a>
 
     <p style="margin-top:auto;">Thanks To God.</p>
     <button class="back-btn" onclick="toggleSidebar()">Kembali</button>
@@ -269,7 +220,7 @@
   </header>
 
   <div class="chat" id="chatBox">
-    </div>
+  </div>
 
   <div class="input-container">
     <input type="text" id="userInput" placeholder="masukkan teks..." />
@@ -298,7 +249,8 @@
       appendChat('user', text);
       input.value = '';
 
-      const apiKey = 'AIzaSyCQE-rjYHJNHfK37ybw01hEsMQx3ZeFWLc';
+      // PENTING: Ganti 'API_KEY_ANDA' dengan Google API Key Anda yang valid
+      const apiKey = 'API_KEY_ANDA';
       const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey;
 
       try {
